@@ -1,3 +1,15 @@
+# TIỀN XỬ LÝ
+import nbformat
+from nbconvert.preprocessors import ExecutePreprocessor
+
+notebook_path = "Data_processing.ipynb"
+
+with open(notebook_path, encoding="utf-8") as f:
+    nb = nbformat.read(f, as_version=4)
+
+ep = ExecutePreprocessor(timeout=600, kernel_name='python3')
+ep.preprocess(nb, {'metadata': {'path': './'}})
+# CHẠY MODEL
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
