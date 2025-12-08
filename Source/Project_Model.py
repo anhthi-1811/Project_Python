@@ -182,75 +182,6 @@ class ModelTrainer:
 
         return metrics
 
-    @staticmethod
-    def _plot_comparison_metrics(results: pd.DataFrame, folder: str):
-        """
-        [STATIC METHOD] Vẽ và lưu biểu đồ so sánh RMSE và R2 giữa các mô hình.
-
-        Args:
-            results (pd.DataFrame): DataFrame chứa kết quả đánh giá của các mô hình.
-            folder (str): Thư mục để lưu file ảnh.
-        """
-        # --- BIỂU ĐỒ 1: SO SÁNH RMSE VÀ R2 (Barplot) ---
-        fig, axes = plt.subplots(1, 2, figsize=(14, 6))
-
-        # RMSE Plot
-        sns.barplot(x="RMSE_Test", y="model", data=results, ax=axes[0], palette="viridis")
-        axes[0].set_title("So sánh RMSE (Thấp hơn là tốt hơn)")
-        axes[0].set_xlabel("RMSE")
-
-        # R2 Plot
-        sns.barplot(x="R2_Test", y="model", data=results, ax=axes[1], palette="magma")
-        axes[1].set_title("So sánh R2 Score (Cao hơn là tốt hơn)")
-        axes[1].set_xlabel("R2 Score")
-        axes[1].set_xlim(0, 1)
-
-        plt.tight_layout()
-        file_path = os.path.join(folder, "comparison_metrics.png")
-        plt.savefig(file_path)
-        plt.close()
-        print(f">>> Đã lưu biểu đồ so sánh metrics tại: {file_path}")
-
-    @staticmethod
-    def _plot_detailed_analysis(y_test: pd.Series, y_pred: np.ndarray, model_name: str, folder: str):
-        """
-        [STATIC METHOD] Vẽ và lưu biểu đồ Actual vs Predicted và Residuals Distribution.
-
-        Args:
-            y_test (pd.Series): Giá trị thực tế của tập test.
-            y_pred (np.ndarray): Giá trị dự đoán trên tập test.
-            model_name (str): Tên mô hình đang phân tích.
-            folder (str): Thư mục để lưu file ảnh.
-        """ 
-        residuals = y_test - y_pred
-
-        fig, axes = plt.subplots(1, 2, figsize=(16, 6))
-
-        # Subplot 1: Actual vs Predicted
-        sns.scatterplot(x=y_test, y=y_pred, ax=axes[0], alpha=0.6, color='blue')
-        
-        # Vẽ đường chéo đỏ (kỳ vọng lý tưởng)
-        min_val = min(y_test.min(), y_pred.min())
-        max_val = max(y_test.max(), y_pred.max())
-        axes[0].plot([min_val, max_val], [min_val, max_val], 'r--', lw=2)
-        
-        axes[0].set_title(f"{model_name}: Actual vs Predicted")
-        axes[0].set_xlabel("Giá Thực tế")
-        axes[0].set_ylabel("Giá Dự đoán")
-
-        # Subplot 2: Residual Distribution
-        sns.histplot(residuals, kde=True, ax=axes[1], color='purple')
-        axes[1].axvline(0, color='r', linestyle='--')
-        axes[1].set_title(f"{model_name}: Phân phối Sai số (Residuals)")
-        axes[1].set_xlabel("Sai số (Thực tế - Dự đoán)")
-
-        plt.tight_layout()
-        file_name = f"analysis_{model_name}.png"
-        file_path = os.path.join(folder, file_name)
-        plt.savefig(file_path)
-        plt.close()
-        print(f">>> Đã lưu biểu đồ phân tích cho {model_name} tại: {file_path}")
-
     # ---------------------- OPTUNA ----------------------
     def objective(self, trial, model_name):
         """
@@ -435,10 +366,6 @@ class ModelTrainer:
         # Lưu kết quả CSV
         self.save_results("experiment_results.csv")
 
-        # Vẽ và lưu biểu đồ
-        print("\n>>> ĐANG VẼ BIỂU ĐỒ SO SÁNH...")
-        self.visualize_results()
-
         return self.results
 
     # ---------------------- PROPERTY ----------------------
@@ -506,33 +433,3 @@ class ModelTrainer:
         print(f">>> Kết quả đã được lưu tại: {file_path}")
         logging.info(f"Saved experiment results to {file_path}")
 
-    # ---------------------------------------------------------------
-    def visualize_results(self, folder='artifacts'):
-        """
-        Vẽ và lưu các biểu đồ đánh giá: So sánh Metrics, Actual vs Predicted và Residuals.
-        """
-        # ... (Phần kiểm tra self.results.empty và tạo folder giữ nguyên) ...
-        if self.results.empty:
-            print("Chưa có kết quả để vẽ biểu đồ.")
-            return
-
-        if not os.path.exists(folder):
-            os.makedirs(folder, exist_ok=True)
-
-        sns.set(style="whitegrid")
-        
-        # --- GỌI STATIC METHOD VẼ BIỂU ĐỒ 1 ---
-        ModelTrainer._plot_comparison_metrics(self.results, folder)
-        
-        # --- GỌI STATIC METHOD VẼ BIỂU ĐỒ 2 & 3 ---
-        for name, model in self.models.items():
-            # Bước này vẫn phải nằm trong phương thức cá thể vì cần truy cập self.X_test
-            y_pred = model.predict(self.X_test)
-            
-            # Gọi phương thức tĩnh mới với các dữ liệu đã tính toán được truyền vào
-            ModelTrainer._plot_detailed_analysis(
-                self.y_test, # Giá trị thực tế (pd.Series)
-                y_pred,     # Giá trị dự đoán (np.ndarray)
-                name,       # Tên mô hình (str)
-                folder      # Thư mục lưu (str)
-            )
