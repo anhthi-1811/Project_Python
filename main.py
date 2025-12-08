@@ -1,27 +1,28 @@
-# TIỀN XỬ LÝ
-import nbformat
-from nbconvert.preprocessors import ExecutePreprocessor
-
-notebook_path = "Data_processing.ipynb"
-
-with open(notebook_path, encoding="utf-8") as f:
-    nb = nbformat.read(f, as_version=4)
-
-ep = ExecutePreprocessor(timeout=600, kernel_name='python3')
-ep.preprocess(nb, {'metadata': {'path': './'}})
-# CHẠY MODEL
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import pandas as pd
 import os
+import nbformat
 
 from Project_Model import ModelTrainer 
 from visualization import Visualizer 
+from nbconvert.preprocessors import ExecutePreprocessor
+
 
 def main():
+    ### TIỀN XỬ LÝ
+    notebook_path = "Data_processing.ipynb"
+
+    with open(notebook_path, encoding="utf-8") as f:
+        nb = nbformat.read(f, as_version=4)
+
+    ep = ExecutePreprocessor(timeout=600, kernel_name='python3')
+    ep.preprocess(nb, {'metadata': {'path': './'}})
+
+    ### CHẠY MÔ HÌNH VÀ TRỰC QUAN DỮ LIỆU
     # 1. CHẠY MÔ HÌNH (Lấy dữ liệu từ Project_Model)
-    file_path = "Car details v3.csv"
+    file_path = "data_processed.csv"
     target_col = "selling_price"
 
     # Khởi tạo và chạy quy trình huấn luyện
