@@ -536,25 +536,3 @@ class ModelTrainer:
                 name,       # Tên mô hình (str)
                 folder      # Thư mục lưu (str)
             )
-
-def main():
-    # 1. Đường dẫn tới file CSV và tên cột target
-    file_path = "Car details v3.csv"
-    target_column = "selling_price"
-
-    # 2. Khởi tạo đối tượng ModelTrainer
-    trainer = ModelTrainer(test_size=0.2, random_state=42)
-
-    # 3. Nạp dữ liệu
-    trainer.load_data(file_path, target_column)
-
-    # 4. Chia train/test
-    trainer.split_data()
-
-    # 5. Chạy tất cả các mô hình đã định nghĩa
-    trainer.run_all_models()
-
-
-# ---------------------------------------------------------------
-if __name__ == "__main__":
-    main()
