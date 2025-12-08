@@ -69,28 +69,38 @@ class Visualizer:
 
     def plot_correlation(self, numerical_cols):
         """
-        Vẽ ma trận tương quan (Heatmap).
-        Giúp xác định các đặc trưng có quan hệ mạnh với Target (để chọn feature)
-        và quan hệ mạnh với nhau (để tránh đa cộng tuyến).
+        Vẽ 2 biểu đồ:
+        1) Full Correlation Matrix
+        2) Correlation với Target
+        Giúp thấy tổng quan và tập trung vào mối quan hệ với biến mục tiêu.
         """
-        # Tạo danh sách cột cần tính (bao gồm cả Target)
         cols = numerical_cols.copy()
-        if self.target_col in self.data.columns and self.target_col not in cols:
+        if self.target_col not in cols:
             cols.append(self.target_col)
 
-        # Tính ma trận tương quan    
         corr = self.data[cols].corr()
 
-        plt.figure(figsize=(10, 8))
-        # Vẽ Heatmap
-        sns.heatmap(corr, annot=True, fmt=".2f", cmap='coolwarm')
-        plt.title('Correlation Matrix')
+        # Tự tạo figure với 2 subplot
+        fig, axes = plt.subplots(1, 2, figsize=(18, 7))
+
+        # --- (1) FULL CORRELATION MATRIX ---
+        sns.heatmap(corr, annot=False, cmap='coolwarm', ax=axes[0])
+        axes[0].set_title("Full Correlation Matrix")
+
+        # --- (2) TARGET CORRELATION ONLY ---
+        target_corr = corr[self.target_col].drop(self.target_col).sort_values(ascending=False)
+
+        sns.heatmap(target_corr.to_frame(), annot=True, cmap="coolwarm", ax=axes[1])
+        axes[1].set_title(f"Correlation with Target: {self.target_col}")
+
         plt.tight_layout()
-        file_name = "correlation_matrix.png"
+
+        file_name = "correlation_full_and_target.png"
         file_path = os.path.join(self.output_dir, file_name)
         plt.savefig(file_path, dpi=300)
         plt.close()
-        print(f">>> [EDA] Đã lưu ma trận tương quan: {file_name}")
+
+        print(f">>> [EDA] Đã lưu biểu đồ tương quan kép: {file_name}")
 
     # Biểu đồ cột cho biến phân loại
     def plot_categorical(self, cat_cols):
