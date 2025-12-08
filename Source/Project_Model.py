@@ -89,15 +89,8 @@ class ModelTrainer:
         """
         self.df = pd.read_csv(file_path)
         self.X = self.df.drop(columns=[target_column])
-        self.y = self.df[target_column]
-
-        # Encode categorical trước
-        self.X = pd.get_dummies(self.X, drop_first=True)
-
-        # Imputer: điền giá trị trung bình cho cột số
-        imputer = SimpleImputer(strategy="mean")
-        self.X = pd.DataFrame(imputer.fit_transform(self.X), columns=self.X.columns)
-
+        self.y = self.df[target_column] 
+        
     # ---------------------------------------------------------------
     def split_data(self):
         """
