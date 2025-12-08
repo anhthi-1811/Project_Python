@@ -35,27 +35,31 @@ def main():
     
     # LẤY CÁC BIẾN QUAN TRỌNG ĐỂ VẼ
     #  Model tốt nhất (để vẽ feature importance/shap)
-    best_model = trainer.best_model
-    #  Dữ liệu gốc (để vẽ EDA - biểu đồ phân phối đẹp hơn)
-    raw_df = trainer.df 
+    best_model = trainer.best_model 
     #  Dữ liệu đã xử lý (để tính SHAP/Feature Importance)
     X_train_processed = trainer.X_train
     
     print(f">>> Model tốt nhất: {trainer.best_model_name}")
 
     # 2. KHỞI TẠO VISUALIZER
+    data = pd.read_csv(file_path)
 
-    viz = Visualizer(data=raw_df, target_col=target_col, output_dir='project_report/plots')
+    viz = Visualizer(data=data, target_col=target_col, output_dir='plots')
 
     # 3. TRỰC QUAN DỮ LIỆU (EDA)
 
-    # Xác định cột số và cột phân loại từ dữ liệu gốc
-    numerical_cols = raw_df.select_dtypes(include=np.number).columns.tolist()
+    # Vẽ biến số (Dùng các cột số sạch như 'mileage', 'torque_value'...)
+    # Loại bỏ các cột ID, cột đã chuẩn hóa (_std) hoặc cột label (_label) để biểu đồ đỡ rối
+    numerical_cols = [c for c in data.select_dtypes(include=np.number).columns 
+                    if not c.endswith(('_std', '_label')) and c != target_col]
     # Loại bỏ target nếu nó nằm trong danh sách input
     if target_col in numerical_cols:
         numerical_cols.remove(target_col)
     
-    categorical_cols = raw_df.select_dtypes(include=['object', 'category']).columns.tolist()
+    # Vẽ biến phân loại (Dùng cột gốc dạng chữ như 'fuel', 'seller_type'...)
+    # Loại bỏ cột 'name' (quá nhiều giá trị) và 'torque' (đã xử lý thành số)
+    categorical_cols = [c for c in data.select_dtypes(include=['object']).columns 
+                if c not in ['name', 'torque']]
 
     print("   - Vẽ phân phối dữ liệu đầu vào...")
     viz.plot_target_distribution()
