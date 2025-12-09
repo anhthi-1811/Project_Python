@@ -88,6 +88,12 @@ class ModelTrainer:
             None: Cập nhật trực tiếp vào self.df, self.X, self.y.
         """
         self.df = pd.read_csv(file_path)
+
+        if 'name' in self.df.columns:
+            self.df = self.df.drop(columns=['name'])
+            print("Đã xóa cột 'name'!")
+        # -------------------------
+
         self.X = self.df.drop(columns=[target_column])
         self.y = self.df[target_column] 
         
