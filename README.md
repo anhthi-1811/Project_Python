@@ -4,23 +4,15 @@ Dự án xây dựng quy trình học máy để dự đoán giá xe hơi. Hệ 
 
 ## Cấu trúc Dự Án
 
-```text
-.
-├── main.py                    # File chạy chính (Master Script)
-├── Data/
-│   ├── Raw/
-│   │   └── Car details v3.csv # Dữ liệu đầu vào thô
-│   ├── Processed/             # Chứa dữ liệu sạch sau khi xử lý
-│   │   ├── data_processed.csv
-│   │   └── data_encoders.csv
-│   └── EDA/                   # Dữ liệu phục vụ phân tích
-│       └── Car_details_eda.csv
-└── Source/                    # Source code & Logic
-    ├── Data_processing.ipynb  # Notebook quy trình xử lý
-    ├── preprocessor.py        # Class DataPreprocessor
-    ├── Project_Model.py       # Class ModelTrainer
-    ├── visualization.py       # Class Visualizer
-    └── README.md              # File hướng dẫn này
+| File / Thư mục | Loại | Mô tả chức năng |
+| :--- | :--- | :--- |
+| **`main.py`** | Script | **Master Script.** File chạy duy nhất, điều phối toàn bộ pipeline. |
+| **`Data_processing.ipynb`** | Notebook | Notebook phân tích và kiểm tra quy trình xử lý dữ liệu. |
+| **`preprocessor.py`** | Module | Chứa lớp **`DataPreprocessor`** (Tiền xử lý, làm sạch, mã hóa). |
+| **`Project_Model.py`** | Module | Chứa lớp **`ModelTrainer`** (Huấn luyện, so sánh, lưu model). |
+| **`visualization.py`** | Module | Chứa lớp **`Visualizer`** (Vẽ biểu đồ, đánh giá, SHAP). |
+| `data_processed.csv` | Output | Dữ liệu sạch sinh ra để train model. |
+| `Car_details_eda.csv` | Output | Dữ liệu phục vụ phân tích EDA. |
 ---
 
 ## Quy trình Hoạt động (Automated Pipeline)
