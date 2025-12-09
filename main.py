@@ -70,13 +70,15 @@ def main():
     # 4. TRỰC QUAN KẾT QUẢ MÔ HÌNH
 
     print("   - Vẽ đánh giá mô hình...")
-    # So sánh các model
-    viz.plot_model_comparison(results_df, metric_name='RMSE_Test')
+     # a) So sánh tổng quan (Bar chart)
+    viz.plot_comparison_metrics(results_df)
     
-    # Actual vs Predicted (Dự đoán lại trên tập test)
-    y_pred = best_model.predict(trainer.X_test)
-    viz.plot_actual_vs_predicted(trainer.y_test, y_pred, trainer.best_model_name)
-    viz.plot_residuals(trainer.y_test, y_pred)
+    # b) Đánh giá chi tiết TỪNG MÔ HÌNH
+    for name, model in trainer.models.items():
+        # Dự đoán trên tập test
+        y_pred = model.predict(trainer.X_test)
+        # Gọi hàm vẽ (sẽ lưu file performance_LinearRegression.png, performance_XGBoost.png...)
+        viz.plot_model_performance(trainer.y_test, y_pred, name)
 
     # 5. GIẢI THÍCH MÔ HÌNH (Explainable AI)
 
