@@ -6,6 +6,15 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler, LabelEncoder, On
 import matplotlib.pyplot as plt
 
 class DataPreprocessor:
+    """
+    Lớp hỗ trợ tiền xử lý dữ liệu dạng bảng (DataFrame) dùng cho phân tích và xây dựng mô hình.
+    - Xác định và quản lý cột số, cột phân loại, và cột mục tiêu.
+    - Xử lý trùng lặp, giá trị thiếu, ngoại lai.
+    - Chuẩn hóa dữ liệu số (StandardScaler, MinMaxScaler).
+    - Mã hóa biến phân loại (LabelEncoder, OneHotEncoder hoặc custom mapping).
+    - Khôi phục giá trị gốc sau chuẩn hóa (inverse scaling).
+    - Lưu dữ liệu đã xử lý và thông tin mã hóa ra file.
+    """
     def __init__(self, df=None):
         """
         Khởi tạo đối tượng DataPreprocessor với dataframe
@@ -361,4 +370,5 @@ class DataPreprocessor:
 
     # Lấy dataframe
     def get_df(self):
+
         return self.df
