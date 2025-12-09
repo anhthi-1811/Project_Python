@@ -42,24 +42,18 @@ def main():
     print(f">>> Model tốt nhất: {trainer.best_model_name}")
 
     # 2. KHỞI TẠO VISUALIZER
-    data = pd.read_csv(file_path)
+    eda_file_path = "Car_details_eda.csv"
+    
+    df_eda = pd.read_csv(eda_file_path)
 
-    viz = Visualizer(data=data, target_col=target_col, output_dir='plots')
+    viz = Visualizer(data=df_eda, target_col=target_col, output_dir='plots')
 
     # 3. TRỰC QUAN DỮ LIỆU (EDA)
-
-    # Vẽ biến số (Dùng các cột số sạch như 'mileage', 'torque_value'...)
-    # Loại bỏ các cột ID, cột đã chuẩn hóa (_std) hoặc cột label (_label) để biểu đồ đỡ rối
-    numerical_cols = [c for c in data.select_dtypes(include=np.number).columns 
-                    if not c.endswith(('_std', '_label')) and c != target_col]
-    # Loại bỏ target nếu nó nằm trong danh sách input
-    if target_col in numerical_cols:
-        numerical_cols.remove(target_col)
-    
-    # Vẽ biến phân loại (Dùng cột gốc dạng chữ như 'fuel', 'seller_type'...)
-    # Loại bỏ cột 'name' (quá nhiều giá trị) và 'torque' (đã xử lý thành số)
-    categorical_cols = [c for c in data.select_dtypes(include=['object']).columns 
-                if c not in ['name', 'torque']]
+    # Các cột số
+    numerical_cols = ['km_driven', 'mileage', 'engine', 
+                      'max_power', 'torque_value', 'age']
+    # Các cột phân loại
+    categorical_cols = ['fuel', 'seller_type', 'transmission', 'owner', 'seats']
 
     print("   - Vẽ phân phối dữ liệu đầu vào...")
     viz.plot_target_distribution()
