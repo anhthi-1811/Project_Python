@@ -1,60 +1,75 @@
 # Car Price Prediction Project
 
-Dự án xây dựng quy trình học máy để dự đoán giá xe hơi. Hệ thống bao gồm đầy đủ các bước từ xử lý dữ liệu thô, huấn luyện đa mô hình, đánh giá hiệu năng và giải thích kết quả dự đoán bằng SHAP.
+Dự án xây dựng quy trình học máy để dự đoán giá xe hơi. Hệ thống tự động hóa hoàn toàn từ khâu xử lý dữ liệu thô, huấn luyện đa mô hình, đến giải thích kết quả bằng SHAP.
 
 ## Cấu trúc Dự Án
 
 | File / Thư mục | Loại | Mô tả chức năng |
 | :--- | :--- | :--- |
-| **`Data_processing.ipynb`** | Notebook | **Bước 1:** Chạy quy trình tiền xử lý dữ liệu. |
-| **`main.py`** | Script | **Bước 2:** File chạy chính để huấn luyện, đánh giá và giải thích mô hình. |
-| **`src/`** (hoặc root) | Classes | Chứa các Class logic: `DataPreprocessor`, `ModelTrainer`, `Visualizer`. |
-| `data_processed.csv` | Output | Dữ liệu sạch sau khi xử lý (dùng để train). |
+| **`main.py`** | Script | **Master Script.** File chạy duy nhất, tự động gọi toàn bộ quy trình (Xử lý -> Train -> Visualize). |
+| **`Data_processing.ipynb`** | Notebook | Chứa logic tiền xử lý dữ liệu (được `main.py` kích hoạt/sử dụng). |
+| **`src/`** (hoặc root) | Classes | Các module: `DataPreprocessor`, `ModelTrainer`, `Visualizer`. |
+| `data_processed.csv` | Output | Dữ liệu sạch sinh ra trong quá trình chạy. |
 | `Car_details_eda.csv` | Output | Dữ liệu phục vụ phân tích EDA. |
-| `data_encoders.csv` | Output | File chứa thông tin mã hóa (mapping). |
 
 ---
 
-## Quy trình Hoạt động (Pipeline)
+## Quy trình Hoạt động (Automated Pipeline)
 
-Hệ thống hoạt động dựa trên 4 giai đoạn chính, sử dụng các Class chuyên biệt:
+Khi chạy `main.py`, hệ thống sẽ thực hiện tuần tự 4 giai đoạn:
 
-### 1. Tiền xử lý dữ liệu (Preprocessing)
-*Sử dụng Class: `DataPreprocessor` (trong `Data_processing.ipynb`)*
-- **Làm sạch:** Xử lý dữ liệu thô, missing values và outliers.
-- **Biến đổi:** Chuẩn hóa (Scaling) và Mã hóa (Encoding).
-- **Feature Engineering:** Tạo các cột đặc trưng mới.
-- **Output:** Xuất ra 3 file CSV (`data_processed.csv`, `Car_details_eda.csv`, `data_encoders.csv`).
-
-### 2. Huấn luyện Mô hình (Modeling)
-*Sử dụng Class: `ModelTrainer` (được gọi bởi `main.py`)*
-- Tách tập dữ liệu Train/Test.
-- Huấn luyện song song nhiều thuật toán Machine Learning.
-- So sánh và tìm ra mô hình dự đoán giá tốt nhất.
-- Lưu trữ mô hình tốt nhất (Best Model).
-
-### 3. Đánh giá Dữ liệu & Hiệu năng
-*Sử dụng Class: `Visualizer` (được gọi bởi `main.py`)*
-- Vẽ biểu đồ phân phối dữ liệu.
-- Xem xét mối tương quan (Correlation) giữa các thuộc tính.
-- Vẽ biểu đồ so sánh hiệu năng (Accuracy, MAE, RMSE...) của các mô hình.
-
-### 4. Giải thích Mô hình (Explainability)
-*Sử dụng Class: `Visualizer` (được gọi bởi `main.py`)*
-- **Feature Importance:** Xác định biến nào ảnh hưởng nhất đến giá xe.
-- **SHAP Analysis:** Giải thích chi tiết quan hệ giữa đặc trưng và giá trị dự đoán (tại sao xe này lại có giá đó).
+1.  **Tiền xử lý (Preprocessing):**
+    * Tự động gọi logic từ `DataPreprocessor` (trong Notebook).
+    * Làm sạch, chuẩn hóa, mã hóa và xuất ra file `data_processed.csv`.
+2.  **Huấn luyện (Modeling):**
+    * Class `ModelTrainer` tách tập dữ liệu Train/Test.
+    * Huấn luyện hàng loạt mô hình và tìm ra thuật toán tối ưu nhất.
+3.  **Đánh giá (Evaluation):**
+    * Class `Visualizer` vẽ biểu đồ phân phối và so sánh hiệu năng các model.
+4.  **Giải thích (Explainability):**
+    * Tính toán Feature Importance và vẽ biểu đồ SHAP để giải thích lý do đằng sau giá xe dự đoán.
 
 ---
 
-## Cài đặt & Yêu cầu hệ thống
+## Cài đặt Môi trường
 
-### 1. Môi trường
-- **Python:** 3.8+
-- **Editor:** Visual Studio Code (Khuyên dùng).
-- **Extensions VS Code:** Python, Jupyter.
+1.  **Yêu cầu:** Python 3.8+, VS Code.
+2.  **Cài đặt thư viện:**
+    Mở Terminal tại thư mục dự án và chạy:
+    ```bash
+    pip install pandas numpy scikit-learn matplotlib seaborn shap
+    # Cần cài thêm jupyter hoặc ipykernel nếu main.py gọi notebook thông qua lệnh hệ thống
+    pip install jupyter
+    ```
 
-### 2. Cài đặt thư viện
-Mở Terminal tại thư mục dự án và chạy lệnh:
+---
 
-```bash
-pip install pandas numpy scikit-learn matplotlib seaborn shap
+## Hướng dẫn Chạy (Workflow)
+
+Bạn chỉ cần thực hiện **duy nhất 1 bước** để chạy toàn bộ dự án:
+
+1.  Mở thư mục dự án trong VS Code.
+2.  Mở **Terminal** (`Ctrl + J`).
+3.  Chạy lệnh:
+
+    ```bash
+    python main.py
+    ```
+
+**Quá trình tự động diễn ra:**
+* **Step 1:** Hệ thống tự động xử lý dữ liệu thô (bạn sẽ thấy các file `.csv` mới xuất hiện).
+* **Step 2:** Quá trình Training bắt đầu (Terminal hiển thị các chỉ số Accuracy/Loss).
+* **Step 3:** Kết thúc, các biểu đồ phân tích và SHAP sẽ tự động hiển thị (popup) hoặc được lưu lại.
+
+---
+
+## Kết quả Đầu ra (Outputs)
+
+Sau khi chương trình chạy xong, bạn sẽ nhận được:
+
+* **Model:** File lưu model tốt nhất (ví dụ `.pkl`).
+* **Data:** 3 file CSV đã được làm sạch và mã hóa.
+* **Charts:**
+    * Biểu đồ phân phối giá xe.
+    * Biểu đồ so sánh hiệu năng các thuật toán.
+    * Biểu đồ SHAP (tác động của từng tính năng lên giá).
