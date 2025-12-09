@@ -1,0 +1,15 @@
+column,category,encoded
+fuel,CNG,0
+fuel,Diesel,1
+fuel,LPG,2
+fuel,Petrol,3
+seller_type,Dealer,0
+seller_type,Individual,1
+seller_type,Trustmark Dealer,2
+transmission,Automatic,0
+transmission,Manual,1
+owner,First Owner,0
+owner,Fourth & Above Owner,1
+owner,Second Owner,2
+owner,Test Drive Car,3
+owner,Third Owner,4
