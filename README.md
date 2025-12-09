@@ -1,50 +1,60 @@
-# Hướng dẫn cài đặt và chạy
+# Car Price Prediction Project
 
-Dự án triển khai quy trình học máy hoàn chỉnh gồm 3 giai đoạn: **Tiền xử lý dữ liệu**, **Xây dựng mô hình**, và **Trực quan hóa kết quả**.
+Dự án xây dựng quy trình học máy để dự đoán giá xe hơi. Hệ thống bao gồm đầy đủ các bước từ xử lý dữ liệu thô, huấn luyện đa mô hình, đánh giá hiệu năng và giải thích kết quả dự đoán bằng SHAP.
 
 ## Cấu trúc Dự Án
 
-| File | Loại | Mô tả chức năng |
+| File / Thư mục | Loại | Mô tả chức năng |
 | :--- | :--- | :--- |
-| **`Project_Pre.ipynb`** | Notebook | **Phần 1: Tiền xử lý.** Làm sạch, chuẩn hóa dữ liệu và Feature Engineering. |
-| **`Project_Model.py`** | Script | **Phần 2: Mô hình.** Định nghĩa Class Model, cấu trúc mạng/thuật toán. |
-| **`visualization.py`** | Script | **Phần 3: Trực quan hóa.** Các hàm vẽ biểu đồ, đánh giá metrics. |
-| **`main.py`** | Script | **File chạy chính.** Gọi class từ `Project_Model`, thực hiện huấn luyện và hiển thị kết quả. |
+| **`Data_processing.ipynb`** | Notebook | **Bước 1:** Chạy quy trình tiền xử lý dữ liệu. |
+| **`main.py`** | Script | **Bước 2:** File chạy chính để huấn luyện, đánh giá và giải thích mô hình. |
+| **`src/`** (hoặc root) | Classes | Chứa các Class logic: `DataPreprocessor`, `ModelTrainer`, `Visualizer`. |
+| `data_processed.csv` | Output | Dữ liệu sạch sau khi xử lý (dùng để train). |
+| `Car_details_eda.csv` | Output | Dữ liệu phục vụ phân tích EDA. |
+| `data_encoders.csv` | Output | File chứa thông tin mã hóa (mapping). |
 
-## Cài đặt Môi trường (Visual Studio Code)
+---
 
-1. **Yêu cầu:**  
-   - Python 3.x 
-   - VS Code Extensions: `Python`, `Jupyter` (để chạy file .ipynb).
+## Quy trình Hoạt động (Pipeline)
 
-2. **Cài đặt thư viện:**
-   Mở Terminal trong VS Code (`Ctrl` + `J`) và chạy lệnh:
-   ```bash
-   pip install pandas numpy scikit-learn matplotlib seaborn
-   # (Thêm các thư viện khác nếu dự án bạn dùng thêm) 
+Hệ thống hoạt động dựa trên 4 giai đoạn chính, sử dụng các Class chuyên biệt:
 
-## Hướng dẫn Chạy (Workflow)
+### 1. Tiền xử lý dữ liệu (Preprocessing)
+*Sử dụng Class: `DataPreprocessor` (trong `Data_processing.ipynb`)*
+- **Làm sạch:** Xử lý dữ liệu thô, missing values và outliers.
+- **Biến đổi:** Chuẩn hóa (Scaling) và Mã hóa (Encoding).
+- **Feature Engineering:** Tạo các cột đặc trưng mới.
+- **Output:** Xuất ra 3 file CSV (`data_processed.csv`, `Car_details_eda.csv`, `data_encoders.csv`).
 
-Để đảm bảo chương trình hoạt động chính xác, vui lòng thực hiện tuần tự theo 2 giai đoạn sau trên Visual Studio Code:
+### 2. Huấn luyện Mô hình (Modeling)
+*Sử dụng Class: `ModelTrainer` (được gọi bởi `main.py`)*
+- Tách tập dữ liệu Train/Test.
+- Huấn luyện song song nhiều thuật toán Machine Learning.
+- So sánh và tìm ra mô hình dự đoán giá tốt nhất.
+- Lưu trữ mô hình tốt nhất (Best Model).
 
-### Giai đoạn 1: Tiền xử lý dữ liệu (Preprocessing)
-**File thực hiện:** `Project_Pre.ipynb`
+### 3. Đánh giá Dữ liệu & Hiệu năng
+*Sử dụng Class: `Visualizer` (được gọi bởi `main.py`)*
+- Vẽ biểu đồ phân phối dữ liệu.
+- Xem xét mối tương quan (Correlation) giữa các thuộc tính.
+- Vẽ biểu đồ so sánh hiệu năng (Accuracy, MAE, RMSE...) của các mô hình.
 
-Bước này giúp làm sạch, chuẩn hóa và chuyển đổi dữ liệu thô trước khi đưa vào mô hình.
+### 4. Giải thích Mô hình (Explainability)
+*Sử dụng Class: `Visualizer` (được gọi bởi `main.py`)*
+- **Feature Importance:** Xác định biến nào ảnh hưởng nhất đến giá xe.
+- **SHAP Analysis:** Giải thích chi tiết quan hệ giữa đặc trưng và giá trị dự đoán (tại sao xe này lại có giá đó).
 
-1. Đảm bảo file dataset gốc (input) đã nằm trong thư mục dự án.
-2. Mở file **`Project_Pre.ipynb`**.
-3. Tại góc trên bên phải VS Code, chọn **Select Kernel** -> **Python Environments** -> Chọn phiên bản Python bạn đang dùng.
-4. Nhấn nút **Run All** trên thanh công cụ của Notebook.
-   > **Kết quả:** Dữ liệu sẽ được xử lý và lưu lại (thường dưới dạng file `.csv` mới hoặc biến môi trường) để sẵn sàng cho Giai đoạn 2.
+---
 
-### Giai đoạn 2: Huấn luyện và Trực quan hóa
-**File thực hiện:** `main.py` (File chạy chính)
+## Cài đặt & Yêu cầu hệ thống
 
-File này đóng vai trò trung tâm: gọi Class mô hình từ `Project_Model.py` để training và sử dụng `visualization.py` để hiển thị kết quả.
+### 1. Môi trường
+- **Python:** 3.8+
+- **Editor:** Visual Studio Code (Khuyên dùng).
+- **Extensions VS Code:** Python, Jupyter.
 
-1. Mở **Terminal** trong VS Code (Phím tắt: `Ctrl + J` hoặc `` Ctrl + ` ``).
-2. Nhập lệnh sau và nhấn Enter:
+### 2. Cài đặt thư viện
+Mở Terminal tại thư mục dự án và chạy lệnh:
 
-   ```bash
-   python main.py
+```bash
+pip install pandas numpy scikit-learn matplotlib seaborn shap
