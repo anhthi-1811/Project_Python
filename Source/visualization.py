@@ -84,7 +84,7 @@ class Visualizer:
         fig, axes = plt.subplots(1, 2, figsize=(18, 7))
 
         # --- (1) FULL CORRELATION MATRIX ---
-        sns.heatmap(corr, annot=False, cmap='coolwarm', ax=axes[0])
+        sns.heatmap(corr, annot=True, fmt=".2f", cmap='coolwarm', ax=axes[0])
         axes[0].set_title("Full Correlation Matrix")
 
         # --- (2) TARGET CORRELATION ONLY ---
