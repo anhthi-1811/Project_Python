@@ -247,7 +247,7 @@ class ModelTrainer:
         return rmse
 
     # ---------------------------------------------------------------
-    def optimize_params(self, model_name, n_trials=20):
+    def optimize_params(self, model_name, n_trials=50):
         """
         Chạy Optuna để tìm bộ siêu tham số tối ưu và huấn luyện lại mô hình.
 
