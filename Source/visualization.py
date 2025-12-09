@@ -274,7 +274,7 @@ class Visualizer:
             
             plt.figure(figsize=(10, 6))
 
-            shap.summary_plot(shap_values, X_train, show=False)
+            shap.summary_plot(shap_values, sample_data, show=False)
             plt.tight_layout()
             file_name = "shap_summary.png"
             file_path = os.path.join(self.output_dir, file_name)
