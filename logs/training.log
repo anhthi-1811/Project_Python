@@ -1,0 +1,26 @@
+2025-12-10 22:20:21,185 [INFO] Data loaded from data_processed.csv. Shape: (6881, 13)
+2025-12-10 22:20:21,190 [INFO] Data split done. Train size: 5504, Test size: 1377
+2025-12-10 22:20:21,190 [INFO] Training model: LinearRegression
+2025-12-10 22:20:21,210 [INFO] Model: LinearRegression | RMSE Test: 0.56 | R2 Test: 0.6218 | RMSE Train: 0.61
+2025-12-10 22:20:21,211 [INFO] Model LinearRegression metrics: {'model': 'LinearRegression', 'RMSE_Test': np.float64(0.5567073509203984), 'MAE_Test': 0.3381854323596778, 'R2_Test': 0.621774512704806, 'RMSE_Train': np.float64(0.6106603089252363)}
+2025-12-10 22:20:21,212 [INFO] Training model: RandomForest
+2025-12-10 22:21:28,244 [INFO] Optuna finished for RandomForest. Best params: {'n_estimators': 125, 'max_depth': 14, 'min_samples_split': 8, 'min_samples_leaf': 5}
+2025-12-10 22:21:28,245 [INFO] Best Optuna CV RMSE: 0.37
+2025-12-10 22:21:30,177 [INFO] Model: RandomForest | RMSE Test: 0.26 | R2 Test: 0.9145 | RMSE Train: 0.26
+2025-12-10 22:21:30,336 [INFO] Model: RandomForest | RMSE Test: 0.26 | R2 Test: 0.9145 | RMSE Train: 0.26
+2025-12-10 22:21:30,351 [INFO] Model RandomForest metrics: {'model': 'RandomForest', 'RMSE_Test': np.float64(0.2646440702378847), 'MAE_Test': 0.1425055871928847, 'R2_Test': 0.9145285219793943, 'RMSE_Train': np.float64(0.26080450537340505)}
+2025-12-10 22:21:30,352 [INFO] Training model: XGBoost
+2025-12-10 22:21:51,453 [INFO] Optuna finished for XGBoost. Best params: {'n_estimators': 184, 'max_depth': 7, 'learning_rate': 0.035208863383150144, 'subsample': 0.7138388520829729, 'colsample_bytree': 0.6282745140770071, 'reg_alpha': 0.02216471786977666, 'reg_lambda': 0.006628606334216993}
+2025-12-10 22:21:51,454 [INFO] Best Optuna CV RMSE: 0.31
+2025-12-10 22:21:51,772 [INFO] Model: XGBoost | RMSE Test: 0.25 | R2 Test: 0.9218 | RMSE Train: 0.14
+2025-12-10 22:21:51,783 [INFO] Model: XGBoost | RMSE Test: 0.25 | R2 Test: 0.9218 | RMSE Train: 0.14
+2025-12-10 22:21:51,784 [INFO] Model XGBoost metrics: {'model': 'XGBoost', 'RMSE_Test': np.float64(0.25319699753459535), 'MAE_Test': 0.14107992674881176, 'R2_Test': 0.9217626769823796, 'RMSE_Train': np.float64(0.14259778247333169)}
+2025-12-10 22:21:51,817 [INFO] Saved model XGBoost to best_model_XGBoost.pkl
+2025-12-10 22:21:51,914 [INFO] ==============================
+2025-12-10 22:21:51,914 [INFO] FINAL BEST MODEL: XGBoost
+2025-12-10 22:21:51,915 [INFO] RMSE Test: 0.25
+2025-12-10 22:21:51,915 [INFO] R2 Test: 0.9218
+2025-12-10 22:21:51,915 [INFO] ==============================
+2025-12-10 22:21:51,947 [INFO] Saved experiment results to experiment_results.csv
+2025-12-10 22:21:58,336 [INFO] Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-12-10 22:21:58,347 [INFO] Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
