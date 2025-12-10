@@ -49,7 +49,7 @@ Khi chạy `main.py`, hệ thống sẽ thực hiện tuần tự 4 giai đoạn
 
 Bạn chỉ cần thực hiện **duy nhất 1 bước** để chạy toàn bộ dự án:
 
-1.  Mở thư mục dự án trong VS Code.
+1.  Mở thư mục dự án trong VS Code (các file code và file data gốc để cùng một thư mục).
 2.  Mở **Terminal** (`Ctrl + J`).
 3.  Chạy lệnh:
 
