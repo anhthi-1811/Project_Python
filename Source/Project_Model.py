@@ -8,6 +8,8 @@ import os
 import random
 import logging
 import joblib 
+import sys
+from datetime import datetime 
 
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
@@ -20,12 +22,19 @@ from sklearn.svm import SVR
 
 from xgboost import XGBRegressor
 
-# Cấu hình logging cơ bản
-import logging
+# Xóa cấu hình cũ 
+for handler in logging.root.handlers[:]:
+    logging.root.removeHandler(handler)  
+
+#  Cấu hình logging
 logging.basicConfig(
-    filename="training.log",
     level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s"
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[
+        logging.FileHandler("training.log", mode='w', encoding='utf-8'), 
+        logging.StreamHandler(sys.stdout) 
+    ],
+    force=True  
 )
 
 class ModelTrainer:
@@ -96,6 +105,8 @@ class ModelTrainer:
 
         self.X = self.df.drop(columns=[target_column])
         self.y = self.df[target_column] 
+        # Ghi lại kích thước dữ liệu
+        logging.info(f"Data loaded from {file_path}. Shape: {self.df.shape}")  
         
     # ---------------------------------------------------------------
     def split_data(self):
@@ -110,6 +121,8 @@ class ModelTrainer:
             random_state=self.random_state
         )
         print(">>> Đã chia train/test.")
+        # Ghi lại kích thước train/test  
+        logging.info(f"Data split done. Train size: {self.X_train.shape[0]}, Test size: {self.X_test.shape[0]}")
 
     # ---------------------- TRAIN & EVALUATE ----------------------
     def train_model(self, model, name):
@@ -151,6 +164,12 @@ class ModelTrainer:
             y_train=self.y_train,
             y_pred_train=y_pred_train
         )
+
+        # Ghi lại kết quả đánh giá chi tiết
+        log_msg = f"Model: {name} | RMSE Test: {metrics['RMSE_Test']:.2f} | R2 Test: {metrics['R2_Test']:.4f}"
+        if 'RMSE_Train' in metrics:
+            log_msg += f" | RMSE Train: {metrics['RMSE_Train']:.2f}"
+        logging.info(log_msg)
 
         return {
             "model": name,
@@ -284,6 +303,10 @@ class ModelTrainer:
         print(f"\n>>> Tham số tốt nhất cho {model_name}: {best_params}")
         print(f">>> Best CV RMSE: {study.best_value:.2f}")
 
+        # Ghi lại tham số tốt nhất tìm được  
+        logging.info(f"Optuna finished for {model_name}. Best params: {best_params}")
+        logging.info(f"Best Optuna CV RMSE: {study.best_value:.2f}")
+
         # 1. Huấn luyện mô hình cuối cùng với tham số tốt nhất
         if model_name == "RandomForest":
             best_model = RandomForestRegressor(**best_params, random_state=self.random_state)
@@ -369,6 +392,14 @@ class ModelTrainer:
         print(f"   - R2 Test: {best_metrics['R2_Test']:.4f}")
         print(f"   - RMSE Train: {best_metrics['RMSE_Train']:.2f}")
 
+        # Ghi nhận mô hình chiến thắng cuối cùng
+        best_metrics = self.results.iloc[0]
+        logging.info("=" * 30)
+        logging.info(f"FINAL BEST MODEL: {best_name}")
+        logging.info(f"RMSE Test: {best_metrics['RMSE_Test']:.2f}")
+        logging.info(f"R2 Test: {best_metrics['R2_Test']:.4f}")
+        logging.info("=" * 30)
+
         # Lưu kết quả CSV
         self.save_results("experiment_results.csv")
 
@@ -438,4 +469,3 @@ class ModelTrainer:
         self.results.to_csv(file_path, index=False)
         print(f">>> Kết quả đã được lưu tại: {file_path}")
         logging.info(f"Saved experiment results to {file_path}")
-
